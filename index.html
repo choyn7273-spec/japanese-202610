@@ -979,7 +979,7 @@ window.SITE_CONFIG = {
     { id: "student", label: "수강생 로그인", cta: true }   // cta: true 는 강조 버튼 모양
   ],
 
-  /* ---------- 데이터 저장 (투표·신청서·출석·과제 제출) ----------
+  /* ---------- 데이터 저장 (투표·회원가입·출석·과제 제출) ----------
    * url 을 비워 두면 '데모 모드'로 동작합니다. (각자의 브라우저에만 저장되어 교수자가 볼 수 없음)
    * 실제로 쓰려면 backend/설치안내.md 를 따라 Google Apps Script 를 배포하고
    * 받은 웹 앱 주소(https://script.google.com/macros/s/.../exec)를 아래에 붙여 넣으세요.
@@ -989,10 +989,10 @@ window.SITE_CONFIG = {
     maxFileMB: 10            // 과제 파일 최대 크기
   },
 
-  /* ---------- 수강생 참여: 투표 · 수강 신청서 ---------- */
+  /* ---------- 수강생 참여: 투표 · 회원가입 ---------- */
   participate: {
     title: "함께 참여해요",
-    lead: "가장 배우고 싶은 주제에 투표하고, 수강 신청서를 제출해 주세요.",
+    lead: "가장 배우고 싶은 주제에 투표하고, 회원가입을 해 주세요.",
     poll: {
       id: "first-topic-2026-2",      // 새 투표를 시작할 때 id 를 바꾸면 처음부터 다시 집계됩니다
       question: "가장 먼저 배우고 싶은 주제는?",
@@ -1007,24 +1007,32 @@ window.SITE_CONFIG = {
       ]
     },
     form: {
-      title: "수강 신청서",
+      title: "회원가입",
       lead: "* 표시는 필수 항목입니다.",
-      // type: text, email, tel, select, textarea, checkbox
+      // type: text, email, tel, password, select, textarea, checkbox
       // pattern: 입력 형식(정규식), patternMessage: 형식이 틀렸을 때 안내 문구
+      // type: "password" 항목은 원문이 아니라 해시값으로 바뀌어 저장됩니다.
+      // match: 같은 값이어야 하는 항목 이름 (확인용 칸은 저장되지 않습니다)
       fields: [
+        { name: "userId", label: "아이디(ID)", type: "text", required: true, placeholder: "영문·숫자 4~20자", autocomplete: "username",
+          pattern: "^[A-Za-z0-9_]{4,20}$", patternMessage: "아이디는 영문·숫자·밑줄(_) 4~20자로 입력해 주세요." },
+        { name: "password", label: "비밀번호(PW)", type: "password", required: true, placeholder: "8자 이상", autocomplete: "new-password",
+          pattern: "^.{8,}$", patternMessage: "비밀번호는 8자 이상으로 입력해 주세요." },
+        { name: "passwordConfirm", label: "비밀번호 확인", type: "password", required: true, placeholder: "비밀번호 다시 입력", autocomplete: "new-password",
+          match: "password", matchMessage: "비밀번호가 일치하지 않습니다." },
+        { name: "phone", label: "휴대폰", type: "tel", required: true, placeholder: "010-0000-0000",
+          pattern: "^01[0-9]-?\\d{3,4}-?\\d{4}$", patternMessage: "휴대폰 번호 형식을 확인해 주세요." },
         { name: "name", label: "이름", type: "text", required: true, placeholder: "홍길동" },
         { name: "studentId", label: "학번", type: "text", required: true, placeholder: "2023123456",
           pattern: "^\\d{10}$", patternMessage: "학번은 숫자 10자리로 입력해 주세요." },
         { name: "major", label: "소속 학과", type: "text", required: true, placeholder: "일어일문학과" },
         { name: "year", label: "학년", type: "select", required: true, options: ["1학년", "2학년", "3학년", "4학년", "기타"] },
         { name: "email", label: "이메일", type: "email", required: true, placeholder: "name@korea.ac.kr" },
-        { name: "phone", label: "연락처", type: "tel", required: false, placeholder: "010-0000-0000",
-          pattern: "^01[0-9]-?\\d{3,4}-?\\d{4}$", patternMessage: "휴대폰 번호 형식을 확인해 주세요." },
         { name: "teacherTrack", label: "교직 이수 여부", type: "select", required: true, options: ["교직 이수 중", "교직 미이수"] },
         { name: "motivation", label: "수강 동기", type: "textarea", required: true, placeholder: "이 강의에서 기대하는 점을 적어 주세요." },
         { name: "agree", label: "개인정보 수집·이용(수업 운영 목적)에 동의합니다.", type: "checkbox", required: true }
       ],
-      successTitle: "신청서가 제출되었습니다 🌸",
+      successTitle: "회원가입이 완료되었습니다 🌸",
       successText: "확인 후 이메일로 안내드리겠습니다."
     }
   },
@@ -1076,13 +1084,13 @@ window.SITE_CONFIG = {
   popup: {
     enabled: true,
     delaySeconds: 2,           // 페이지 접속 후 몇 초 뒤에 뜰지
-    title: "2026-2 수강 신청 안내",
+    title: "2026-2 회원가입 안내",
     lines: [
-      "일본어교과교재연구및지도법 수강 신청을 받고 있습니다.",
+      "일본어교과교재연구및지도법 회원가입을 받고 있습니다.",
       "매주 월·수 15:00–16:15 · AI 실습 포함",
-      "아래 버튼을 눌러 수강 신청서를 작성해 주세요."
+      "아래 버튼을 눌러 회원가입을 해 주세요."
     ],
-    buttonLabel: "수강 신청서 작성하기",
+    buttonLabel: "회원가입하기",
     buttonHref: "#apply"
   },
 
@@ -1095,13 +1103,13 @@ window.SITE_CONFIG = {
   /* ---------- 첫 화면 ---------- */
   hero: {
     badge: "고려대학교 일어일문학과 · 2026학년도 2학기",
-    title: "일본어교과교재연구및지도법",
+    title: "🗾 일본어교과교재연구및지도법 📚",   //  : 이모지가 혼자 줄바꿈되지 않게 하는 띄어쓰기
     subtitle: "AI 기반 데이터 활용능력 배양",
     description:
       "제2언어습득 연구의 성과를 바탕으로 말하기·듣기·쓰기·읽기 지도를 분석하고, 생성형 AI와 데이터를 활용해 실제 수업에서 쓸 수 있는 교재와 교수학습과정안을 직접 만들어 보는 강의입니다.",
     buttons: [
-      // href: "#apply" 는 이 사이트의 수강 신청서로 이동합니다. 외부 링크(https://...)도 쓸 수 있어요.
-      { label: "수강 신청", href: "#apply", primary: true },
+      // href: "#apply" 는 이 사이트의 회원가입으로 이동합니다. 외부 링크(https://...)도 쓸 수 있어요.
+      { label: "회원가입", href: "#apply", primary: true },
       { label: "커리큘럼 보기", href: "#curriculum", primary: false }
     ]
   },
@@ -1925,7 +1933,7 @@ window.SITE_CONFIG = {
 
 </script>
 <script data-bundle>
-// 수강생 참여 기능: 투표 · 수강 신청서 · 로그인/출석/과제 제출 · 안내 팝업 · 첫 방문 폭죽
+// 수강생 참여 기능: 투표 · 회원가입 · 로그인/출석/과제 제출 · 안내 팝업 · 첫 방문 폭죽
 // 내용 수정은 config.js 에서 하세요.
 (function () {
   const C = window.SITE_CONFIG, U = window.SITE;
@@ -2064,7 +2072,7 @@ window.SITE_CONFIG = {
   U.loadNotices();
 
   /* =========================================================
-   * 1. 투표 + 수강 신청서
+   * 1. 투표 + 회원가입
    * ========================================================= */
   const poll = P.poll, form = P.form;
   let voterId = local.get("voterId", null);
@@ -2073,7 +2081,7 @@ window.SITE_CONFIG = {
 
   const fieldHtml = (f) => {
     const id = `f-${f.name}`, req = f.required ? ` <span class="req">*</span>` : "";
-    const common = `id="${id}" name="${esc(f.name)}" aria-describedby="${id}-err"`;
+    const common = `id="${id}" name="${esc(f.name)}" aria-describedby="${id}-err"${f.autocomplete ? ` autocomplete="${esc(f.autocomplete)}"` : ""}`;
     let input;
     if (f.type === "select") {
       input = `<select ${common}><option value="">선택해 주세요</option>${
@@ -2125,14 +2133,14 @@ window.SITE_CONFIG = {
         <div class="error-summary" id="applySummary" role="alert" hidden></div>
         <form id="applyForm" novalidate>
           <div class="fields">${form.fields.map(fieldHtml).join("")}</div>
-          <button class="btn primary wide-btn" type="submit">신청서 제출</button>
+          <button class="btn primary wide-btn" type="submit">회원가입</button>
           <p class="form-msg" id="applyMsg" role="status"></p>
         </form>
         <div class="apply-done" id="applyDone" hidden>
           <div class="done-icon">🌸</div>
           <h3>${esc(form.successTitle)}</h3>
           <p>${esc(form.successText)}</p>
-          <button class="btn" id="applyAgain">새 신청서 작성</button>
+          <button class="btn" id="applyAgain">다시 가입하기</button>
         </div>
       </article>
     </div>`;
@@ -2185,18 +2193,21 @@ window.SITE_CONFIG = {
   loadResults();
   setInterval(() => { if (!document.hidden) loadResults(); }, Math.max(3, poll.refreshSeconds) * 1000);
 
-  /* ----- 수강 신청서 ----- */
+  /* ----- 회원가입 ----- */
+  // SHA-256 계산은 admin.js 의 U.sha256 을 같이 씀 (브라우저 기능이 없어도 동작)
+  const hashPassword = (pw) => U.sha256(((C.admin && C.admin.salt) || "") + pw);
   const applyForm = $("#applyForm"), summary = $("#applySummary");
   const validate = () => {
     const errors = [];
     form.fields.forEach((f) => {
       const el = applyForm.elements[f.name], box = applyForm.querySelector(`[data-field="${f.name}"]`);
-      const value = f.type === "checkbox" ? el.checked : el.value.trim();
+      const value = f.type === "checkbox" ? el.checked : f.type === "password" ? el.value : el.value.trim();
       let msg = "";
       if (f.required && !value)
         msg = f.type === "checkbox" ? "동의가 필요합니다." : f.type === "select" ? "선택해 주세요." : "입력해 주세요.";
       else if (value && f.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) msg = "이메일 형식을 확인해 주세요.";
       else if (value && f.pattern && f.type !== "checkbox" && !new RegExp(f.pattern).test(value)) msg = f.patternMessage || "형식을 확인해 주세요.";
+      else if (value && f.match && value !== applyForm.elements[f.match].value) msg = f.matchMessage || "값이 일치하지 않습니다.";
       box.classList.toggle("invalid", !!msg);
       el.setAttribute("aria-invalid", !!msg);
       box.querySelector(".field-error").textContent = msg;
@@ -2219,11 +2230,14 @@ window.SITE_CONFIG = {
     const btn = applyForm.querySelector("button[type=submit]"), msg = $("#applyMsg");
     btn.disabled = true; msg.className = "form-msg"; msg.textContent = "제출하는 중…";
     const data = {};
-    form.fields.forEach((f) => {
-      const el = applyForm.elements[f.name];
-      data[f.name] = f.type === "checkbox" ? (el.checked ? "동의" : "") : el.value.trim();
-    });
     try {
+      for (const f of form.fields) {
+        if (f.match) continue; // 확인용 칸은 저장하지 않음
+        const el = applyForm.elements[f.name];
+        // 비밀번호는 원문 대신 해시값만 저장
+        data[f.name] = f.type === "checkbox" ? (el.checked ? "동의" : "")
+          : f.type === "password" ? await hashPassword(el.value) : el.value.trim();
+      }
       await api("apply", { form: data });
       applyForm.reset(); msg.textContent = "";
       applyForm.hidden = true; $("#applyDone").hidden = false;
@@ -2448,7 +2462,7 @@ window.SITE_CONFIG = {
   setInterval(renderAttendance, 30000);
 
   /* =========================================================
-   * 3. 첫 방문 폭죽 + 수강 신청 안내 팝업
+   * 3. 첫 방문 폭죽 + 회원가입 안내 팝업
    * ========================================================= */
   const firstVisit = !local.get("visited", false);
   local.set("visited", true);
@@ -2611,6 +2625,7 @@ window.SITE_CONFIG = {
     return H.map((v) => (v >>> 0).toString(16).padStart(8, "0")).join("");
   }
   const hashPassword = (pw) => sha256((ADM.salt || "") + pw);
+  U.sha256 = sha256; // 회원가입 비밀번호 해시에도 사용 (participate.js)
 
   /* ---------- 공통 도우미 ---------- */
   const clone = (o) => JSON.parse(JSON.stringify(o));
@@ -2700,7 +2715,7 @@ window.SITE_CONFIG = {
     { id: "notice", label: "📢 공지" },
     { id: "attend", label: "✅ 출석" },
     { id: "hw", label: "📤 과제" },
-    { id: "apply", label: "📝 수강 신청" },
+    { id: "apply", label: "📝 회원가입" },
     { id: "file", label: "💾 설정 파일" }
   ];
   let panel = null, current = "dash", data = null, draft = clone(C), dirty = false;
@@ -2822,7 +2837,7 @@ window.SITE_CONFIG = {
       const todayAtt = data.attendance.filter((a) => a.date === todayKey).length;
       const cards = [
         ["👥", "등록 수강생", data.students.length, "roster"],
-        ["📝", "수강 신청서", data.applications.length, "apply"],
+        ["📝", "회원가입", data.applications.length, "apply"],
         ["✅", "오늘 출석", todayAtt, "attend"],
         ["📤", "과제 제출", data.submissions.length, "hw"],
         ["🗳️", "투표 참여", voteTotal, null],
@@ -2836,7 +2851,7 @@ window.SITE_CONFIG = {
           <h4>빠른 안내</h4>
           <ul>
             <li><b>사이트 편집</b>에서 고친 내용은 ‘미리보기 적용’ 시 이 브라우저에만 보입니다. 모든 방문자에게 반영하려면 <b>설정 파일 → ${CFG_FILE} 저장</b> 후 사이트의 ${CFG_FILE} 를 바꿔 올리세요.</li>
-            <li>수강생 명단·공지·출석·과제·신청서는 ${DEMO ? "<b>데모 모드</b>라 이 브라우저에만 저장됩니다." : "구글 스프레드시트에 바로 저장됩니다."}</li>
+            <li>수강생 명단·공지·출석·과제·회원가입 정보는 ${DEMO ? "<b>데모 모드</b>라 이 브라우저에만 저장됩니다." : "구글 스프레드시트에 바로 저장됩니다."}</li>
             <li>각 표의 <b>엑셀 내려받기</b>는 엑셀에서 바로 열리는 CSV 파일을 만듭니다.</li>
           </ul>
         </div>`;
@@ -2936,9 +2951,9 @@ window.SITE_CONFIG = {
       const { headers, rows } = applicationTable();
       return `
         <div class="adm-toolbar">
-          <h3>수강 신청 내역 <small>${rows.length}건</small></h3>
+          <h3>회원가입 내역 <small>${rows.length}건</small></h3>
           <span class="spacer"></span>
-          <button class="btn" id="apToRoster">신청자를 명단에 추가</button>
+          <button class="btn" id="apToRoster">가입자를 명단에 추가</button>
           <button class="btn primary" id="apCsv">엑셀 내려받기</button>
         </div>
         ${table(headers, rows)}
@@ -3097,8 +3112,8 @@ window.SITE_CONFIG = {
         const have = new Set(data.students.map((s) => String(s.studentId)));
         const add = data.applications.filter((a) => a.studentId && !have.has(String(a.studentId)))
           .map((a) => ({ studentId: String(a.studentId), name: a.name || "", code: String(1000 + Math.floor(Math.random() * 9000)) }));
-        if (!add.length) { msg.className = "form-msg"; msg.textContent = "새로 추가할 신청자가 없습니다."; return; }
-        if (!confirm(`신청자 ${add.length}명을 수강생 명단에 추가할까요? (접속코드 자동 생성)`)) return;
+        if (!add.length) { msg.className = "form-msg"; msg.textContent = "새로 추가할 가입자가 없습니다."; return; }
+        if (!confirm(`가입자 ${add.length}명을 수강생 명단에 추가할까요? (접속코드 자동 생성)`)) return;
         try {
           const list = [...data.students, ...add];
           await adminApi("saveStudents", { students: list });
@@ -3165,7 +3180,7 @@ window.SITE_CONFIG = {
     site: "사이트 기본 정보", nav: "상단 메뉴", hero: "첫 화면", info: "한눈에 보기", stats: "숫자 강조 카드",
     about: "프로그램 소개 · 장점 슬라이드", schedule: "수업 일정(요일·시간·장소·휴강)", curriculum: "커리큘럼(15주)",
     tools: "AI 도구", guide: "수강 준비물", faq: "자주 묻는 질문", instructor: "교수자 소개(푸터)",
-    notices: "공지사항(기본값)", backend: "서버 연결", participate: "투표 · 수강 신청서", student: "수강생 공간",
+    notices: "공지사항(기본값)", backend: "서버 연결", participate: "투표 · 회원가입", student: "수강생 공간",
     popup: "안내 팝업", welcome: "첫 방문 환영 효과"
   };
   const FIELD_LABELS = {
@@ -3177,7 +3192,7 @@ window.SITE_CONFIG = {
     videos: "참고 영상", assignment: "과제", due: "마감(YYYY-MM-DD HH:MM)", submitUrl: "제출 링크", place: "장소",
     startDate: "개강일", days: "수업 요일(0=일 1=월 … 6=토)", startTime: "시작 시각", endTime: "종료 시각",
     holidays: "휴강일", date: "날짜", body: "본문", pinned: "고정", cta: "강조 버튼", question: "질문",
-    options: "선택지", refreshSeconds: "새로고침(초)", poll: "투표", form: "신청서", type: "입력 종류",
+    options: "선택지", refreshSeconds: "새로고침(초)", poll: "투표", form: "회원가입 양식", type: "입력 종류",
     required: "필수", placeholder: "예시 문구", pattern: "형식(정규식)", patternMessage: "형식 오류 문구",
     successTitle: "완료 제목", successText: "완료 문구", loginHelp: "로그인 도움말", attendance: "출석",
     openBeforeMinutes: "시작 몇 분 전부터", lateAfterMinutes: "몇 분 뒤부터 지각", closeAtEnd: "수업 끝나면 마감",
