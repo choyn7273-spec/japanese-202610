@@ -105,6 +105,7 @@ section { padding: 72px 0 24px; }
 
 /* ---------- 히어로 ---------- */
 .hero { text-align: center; padding: 96px 0 56px; position: relative; }
+.hero-logo { display: block; height: clamp(44px, 10vw, 64px); width: auto; margin: 0 auto 20px; }
 .hero-badge {
   display: inline-block; padding: 6px 16px; border-radius: 999px; font-size: .85rem; font-weight: 500;
   background: #fff; color: var(--purple-600); box-shadow: var(--shadow); margin-bottom: 20px;
@@ -1102,6 +1103,8 @@ window.SITE_CONFIG = {
 
   /* ---------- 첫 화면 ---------- */
   hero: {
+    logo: "images/ku-logo.png",   // 제목 위 로고 (비워 두면 표시하지 않습니다)
+    logoAlt: "고려대학교",
     badge: "고려대학교 일어일문학과 · 2026학년도 2학기",
     title: "🗾 일본어교과교재연구및지도법 📚",   //  : 이모지가 혼자 줄바꿈되지 않게 하는 띄어쓰기
     subtitle: "AI 기반 데이터 활용능력 배양",
@@ -1455,6 +1458,7 @@ window.SITE_CONFIG = {
   const isExternal = (href) => /^https?:/.test(href);
   const hero = `
     <section class="hero" id="hero">
+      ${h.logo ? `<img class="hero-logo" src="${esc(h.logo)}" alt="${esc(h.logoAlt || "")}">` : ""}
       <span class="hero-badge">${esc(h.badge)}</span>
       <h1>${esc(h.title)}</h1>
       <p class="hero-subtitle">${esc(h.subtitle)}</p>
